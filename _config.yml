@@ -1,9 +1,5 @@
-#
-# This file contains configuration flags to customize your site
-#
-
 # Name of your site (displayed in the header)
-name: Ben Ashby's Web Page
+name: benashby.com
 
 # Name of the author
 author: Ben Ashby

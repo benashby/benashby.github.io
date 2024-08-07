@@ -4,26 +4,48 @@ title: About
 permalink: /about/
 ---
 
-[Reverie](https://github.com/amitmerchant1990/reverie) is a Jekyll theme which is simple and opinionated. It's actually a fork of [jekyll-now](https://github.com/barryclark/jekyll-now) with some additional features and personal touches which I've implemented to suit my needs for [my blog](https://www.amitmerchant.com).
+# Ben Ashby's Tech Blog
 
-This is a plug-and-play Jekyll theme which you can use on GitHub Pages without even setting up a local environment.
+Welcome to the official repository for Ben Ashby's Tech Blog!
+
+## Project Description
+
+This project hosts the source code and content for Ben Ashby's Tech Blog, available at [benashby.com](https://benashby.com). The blog covers a variety of tech topics, with a focus on my favorite areas:
+
+- **Software Architecture**
+- **Artificial Intelligence (AI)**
+- **DevOps and Kubernetes (k8s)**
+- **Cloud Computing**
+- **Programming**
+
+## Favorite Programming Languages
+
+- **Java**
+- **C++**
+- **Go**
+- **JavaScript/TypeScript**
+- **Rust**
+
+## Website
+
+Visit the blog at [benashby.com](https://benashby.com).
 
 ## Features
 
-- Command-line free fork-first workflow, using GitHub.com to create, customize and post to your blog
-- Fully responsive and mobile optimized base theme
-- Sass/Coffeescript support using Jekyll 2.0
-- Free hosting on your GitHub Pages user site
-- All the SEO goodies comes in-built
-- Markdown blogging
-- Syntax highlighting using Pygments
-    - [Dracula syntax theme](https://draculatheme.com/) included
-- Disqus commenting
-- Google Analytics integration
-- Fuzzy search across blog posts
-- Pagination of posts works out-of-the-box.
-- Categorize posts out-of-the box
-- RSS Feed
-- In-built sitemap
+- **Tech Articles**: In-depth articles on a variety of tech topics.
+- **Tutorials**: Step-by-step guides to help you learn new skills.
+- **Code Snippets**: Useful code snippets for various programming languages.
+- **Networking Tips**: Tips and tricks for network setup and management.
+- **System Administration**: Best practices and advice for system administrators.
 
-Learn more about it [here](https://github.com/amitmerchant1990/reverie) on how to get started.
+## Contributing
+
+Contributions are welcome! Please fork the repository and create a pull request with your changes.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+## Contact
+
+For any inquiries, please contact Ben Ashby at [contact@benashby.com](mailto:contact@benashby.com).
