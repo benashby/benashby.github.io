@@ -42,5 +42,5 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Contact
 
-For any inquiries, please contact Ben Ashby at [contact@benashby.com](mailto:contact@benashby.com).
+For any inquiries, please contact Ben Ashby at [mail@benashby.com](mailto:mail@benashby.com).
 
