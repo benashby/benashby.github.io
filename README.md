@@ -1,6 +1,6 @@
 # Ben Ashby's Tech Blog
 
-Welcome to the official repository for Ben Ashby's Tech Blog!
+This is my tech blog, where I write about a variety of tech topics. I have a passion for software architecture, artificial intelligence, DevOps, cloud computing, and programming. I hope you find my articles helpful and informative.
 
 ## Project Description
 
@@ -31,16 +31,3 @@ Visit the blog at [benashby.com](https://benashby.com).
 - **Code Snippets**: Useful code snippets for various programming languages.
 - **Networking Tips**: Tips and tricks for network setup and management.
 - **System Administration**: Best practices and advice for system administrators.
-
-## Contributing
-
-Contributions are welcome! Please fork the repository and create a pull request with your changes.
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
-## Contact
-
-For any inquiries, please contact Ben Ashby at [mail@benashby.com](mailto:mail@benashby.com).
-
