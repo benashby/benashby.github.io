@@ -2,7 +2,7 @@
 layout: post
 title: Phantom Types in Rust
 categories: [Rust, Programming]
-excerpt: Learn the basics and purpose of phantom types in Rust
+excerpt: Learn how phantom types in Rust enable compile-time guarantees without runtime overhead. This post explains how to use PhantomData to track type-level information, enforce state transitions, and create safer, more robust APIs.
 ---
 
 # Using Phantom Types in Rust

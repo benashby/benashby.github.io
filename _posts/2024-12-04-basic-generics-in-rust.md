@@ -2,7 +2,7 @@
 layout: post
 title: Basic Generics in Rust
 categories: [Rust, Programming]
-excerpt: Learn how to use basic generics in Rust
+excerpt: Discover how to use generics in Rust to create flexible structs, enums, and functions. This post covers defining generic types, implementing shared functionality, and providing specialized behavior for specific types.
 ---
 
 # Basic Generics in Rust

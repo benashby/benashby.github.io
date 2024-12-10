@@ -2,7 +2,7 @@
 layout: post
 title: Trait Bounds in Rust
 categories: [Rust, Programming]
-excerpt: Learn how to use trait bounds in Rust to write more flexible and reusable code
+excerpt: Learn how to use trait bounds in Rust to write flexible and reusable code. This post covers defining trait bounds, combining multiple constraints, using where clauses for readability, and handling Rust’s orphan rule with wrapper types.
 ---
 
 # Exploring Trait Bounds in Rust
