@@ -24,7 +24,7 @@ fn basic_shared_reference_example() {
     let x = 10;
     // Borrow `x` as an immutable (shared) reference
     print_value(&x);
-    // `x` is still owned by main, `print_value` just borrowed it.
+    // `x` is still owned by the calling function, `print_value` just borrowed it.
     println!("x is still accessible: {}", x);
 }
 
@@ -76,7 +76,7 @@ In the snippet above, `increment` takes an exclusive borrow of `x`. While `incre
 
 ## The Borrow Checker: Ensuring Safety
 
-Rust’s compiler [uses a borrow checker](https://doc.rust-lang.org/1.8.0/book/references-and-borrowing.html#meta) to verify these constraints at compile time. The borrow checker prevents you from compiling code that would create invalid or conflicting references.
+[Rust’s compiler uses a borrow checker](https://doc.rust-lang.org/book/ch04-02-references-and-borrowing.html){: target="_blank" rel="noopener"} to verify these constraints at compile time. The borrow checker prevents you from compiling code that would create invalid or conflicting references.
 
 For example, Rust won’t allow a scenario where you have both a mutable reference and a shared reference alive at the same time:
 
@@ -142,7 +142,7 @@ mod tests {
 
 The compiler ensures that `r` cannot outlive `x`. By enforcing these lifetime rules, Rust prevents dangling references. In practice, you’ll mostly rely on inference, but you may encounter advanced situations where explicit lifetimes are required.  It is possible to define explicit lifetimes, but it won't be covered in this post.
 
-## Putting It All Together: Shared and Exclusive Borrows in Practice
+## Shared and Exclusive Borrows in Practice
 
 Let’s look at a more complex example that mixes multiple references safely:
 
@@ -158,7 +158,6 @@ fn push_value(vec: &mut Vec<i32>, val: i32) {
 
 #[cfg(test)]
 mod tests {
-    use std::fmt::format;
     use super::*;
 
     #[test]
@@ -186,4 +185,4 @@ The total is: 6
 After push: [1, 2, 3, 4]
 ```
 
-In a future blog post I will cover `Mutex` and `RwLock` which are used to share data between threads.  These are more advanced topics that build on the concepts of borrowing and lifetimes that we have covered in this post.  Stay tuned for that post.
+In a future blog post I will cover `Mutex` and `RwLock` which are used to share data between threads.  These are more advanced topics that build on the concepts of borrowing and lifetimes that we have covered in this post.
