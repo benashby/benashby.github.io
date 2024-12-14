@@ -2,7 +2,7 @@
 layout: post
 title: Understanding Borrowing and Lifetimes in Rust
 categories: [Rust, Programming]
-excerpt: Learn how borrowing works in Rust, from basic references to advanced exclusive borrows and lifetime management
+excerpt: Rust's borrowing and lifetime rules ensure memory safety without garbage collection. This post explores shared and exclusive borrows, lifetime management, and the role of the borrow checker in preventing data races and dangling references using some basic examples.
 ---
 
 # Understanding Borrowing and Lifetimes in Rust
@@ -20,13 +20,24 @@ fn print_value(value: &i32) {
     println!("The value is: {}", value);
 }
 
-fn main() {
+fn basic_shared_reference_example() {
     let x = 10;
     // Borrow `x` as an immutable (shared) reference
     print_value(&x);
     // `x` is still owned by main, `print_value` just borrowed it.
     println!("x is still accessible: {}", x);
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_basic_shared_reference() {
+        basic_shared_reference_example();
+    }
+}
+
 ```
 
 In this example, `print_value` takes a reference to an `i32`. By passing `&x`, we create a _shared reference_: `print_value` can read `x` but not modify it. After `print_value` returns, `x` is still valid and owned by main. There’s no copying or transferring of ownership here—just a temporary borrow.
@@ -40,12 +51,25 @@ fn increment(value: &mut i32) {
     *value += 1;
 }
 
-fn main() {
+fn basic_mutable_reference_example() {
     let mut x = 5;
     // Create a mutable reference to `x`
     increment(&mut x);
+    increment(&mut x);
     println!("x after increment: {}", x);
+    //This will print 7
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_basic_mutable_reference() {
+        basic_mutable_reference_example();
+    }
+}
+
 ```
 
 In the snippet above, `increment` takes an exclusive borrow of `x`. While `increment` is running, no other references to `x` may exist. After `increment` returns, it gives back the exclusive borrow, and we can read `x` again.
@@ -57,7 +81,7 @@ Rust’s compiler [uses a borrow checker](https://doc.rust-lang.org/1.8.0/book/r
 For example, Rust won’t allow a scenario where you have both a mutable reference and a shared reference alive at the same time:
 
 ```rust
-fn main() {
+fn basic_invalid_borrow_example() {
     let mut data = String::from("Hello");
     let r1 = &data;       // Shared borrow
     let r2 = &mut data;   // Attempt an exclusive borrow
@@ -66,7 +90,21 @@ fn main() {
     // error[E0502]: cannot borrow `data` as mutable because it is also borrowed as immutable
     println!("{}", r1);
     println!("{}", r2);
+    
+    //You could have any number of immutable references, or only 1 mutable reference.
+    //This is a restriction placed by the borrow checker to prevent race conditions and other problems.
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_basic_invalid_borrow() {
+        basic_invalid_borrow_example();
+    }
+}
+
 ```
 
 The borrow checker catches this at compile time, preventing invalid memory access and potential data races.
@@ -78,17 +116,28 @@ Every reference in Rust has a lifetime, a scope over which the reference is vali
 When a reference is created, its lifetime can’t outlive the data it points to. For example:
 
 ```rust
-fn main() {
+fn basic_scoped_borrow_example() {
     let r;            // Declare a reference `r`
     {
         let x = 10;   // `x` lives until the end of this block
         r = &x;       // Borrow `x`
-    } 
+    }
     // `x` no longer exists here, so `r` is dangling!
     // println!("{}", r); // This would be invalid.
 
     // The borrow checker ensures that code like this doesn't compile.
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_basic_scoped_borrow() {
+        basic_scoped_borrow_example();
+    }
+}
+
 ```
 
 The compiler ensures that `r` cannot outlive `x`. By enforcing these lifetime rules, Rust prevents dangling references. In practice, you’ll mostly rely on inference, but you may encounter advanced situations where explicit lifetimes are required.  It is possible to define explicit lifetimes, but it won't be covered in this post.
@@ -128,6 +177,13 @@ mod tests {
     }
 
 }
+```
+
+The output of this is
+
+```text
+The total is: 6
+After push: [1, 2, 3, 4]
 ```
 
 In a future blog post I will cover `Mutex` and `RwLock` which are used to share data between threads.  These are more advanced topics that build on the concepts of borrowing and lifetimes that we have covered in this post.  Stay tuned for that post.
