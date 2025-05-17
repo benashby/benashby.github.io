@@ -88,10 +88,9 @@ import com.example.dailyplanner.ui.theme.DailyPlannerTheme // Your app's theme
 // import androidx.compose.runtime.mutableStateOf // if managing user state directly in Activity
 
 class MainActivity : ComponentActivity() {
-    // Firebase Auth and CredentialManager would be initialized here as in your example
-    // private lateinit var auth: FirebaseAuth
-    // private lateinit var credentialManager: CredentialManager
-    // private var currentUserState = mutableStateOf<FirebaseUser?>(null)
+    private lateinit var auth: FirebaseAuth
+    private lateinit var credentialManager: CredentialManager
+    private var currentUserState by mutableStateOf<FirebaseUser?>(null) // State to hold the current user
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -100,26 +99,34 @@ class MainActivity : ComponentActivity() {
         // Initialize auth, credentialManager, and authStateListener as per your actual MainActivity.kt
 
         setContent {
-            DailyPlannerTheme { // Apply your app's custom theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    // Based on your MainActivity.kt, you'd have something like:
-                    // val user = currentUserState.value
-                    // MainAppScreen(
-                    //     currentUser = user,
-                    //     onSignInInitiated = { initiateGoogleSignIn() },
-                    //     onSignOut = { signOut() }
-                    // )
-                    // For a simpler version without full nav for this blog post:
-                    // DailyPlanScreen() // Assuming DailyPlanScreen and its ViewModel handle auth state.
+            DailyPlannerTheme {
+                val user = currentUserState // Use the state variable
+
+                // Automatically attempt sign-in if no user is logged in and not already attempted
+                if (user == null && auth.currentUser == null) {
+                    LaunchedEffect(Unit) { // Keyed to Unit to run once
+                        Log.d(TAG, "setContent: No current user, initiating Google Sign-In from LaunchedEffect.")
+                        initiateGoogleSignIn()
+                    }
                 }
+
+                MainAppScreen(
+                    currentUser = user,
+                    onSignInInitiated = { initiateGoogleSignIn() },
+                    onSignOut = { signOut() }
+                )
             }
         }
     }
     // Include initiateGoogleSignIn(), handleSignInWithCredential(), authenticateWithFirebase(), signOut() methods
     // from your MainActivity.kt or a similar structure.
+
+    // This design is good because:
+    // 1. It uses Compose's state-driven approach - currentUserState is a mutable state that drives UI recomposition
+    // 2. It handles authentication state reactively - when user state changes, the UI automatically updates
+    // 3. It implements a smart auto-sign-in with LaunchedEffect - attempts sign-in only once when needed
+    // 4. It separates concerns - authentication logic in Activity, UI rendering in Composables
+    // 5. It provides clear event handlers (onSignInInitiated, onSignOut) that connect UI events to business logic
 }
 ```
 
@@ -375,17 +382,6 @@ fun MainAppScreen(
             }
         }
     } else {
-        // User is signed in, show the main app content
-        // This is where you'd put your DailyPlanScreen or NavigationHost
-        // For the blog post, we'll assume DailyPlanScreen is shown and gets the userId
-        // val dailyPlanViewModel: DailyPlanViewModel = viewModel(
-        //     factory = DailyPlanViewModel.Factory(
-        //         repository = DailyPlanRepository(FirebaseFirestore.getInstance()), // Provide actual repo
-        //         userId = currentUser.uid // Pass the current user's ID
-        //     )
-        // )
-        // DailyPlanScreen(viewModel = dailyPlanViewModel)
-
         // A simpler placeholder for now:
         Column(
              modifier = Modifier.fillMaxSize().padding(16.dp),
@@ -399,8 +395,7 @@ fun MainAppScreen(
                 Text("Sign Out")
             }
             Spacer(modifier = Modifier.height(20.dp))
-            Text("Your Daily Planner App Content Would Go Here.")
-            // Example: Instantiate and call DailyPlanScreen, passing the current user's ID to its ViewModel.
+            Text("Daily Planner App Content Would Go Here.")
         }
     }
 }
