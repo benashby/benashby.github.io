@@ -5,10 +5,6 @@ categories: [AI, Gaming, MCP]
 excerpt: Learn how to build a Model Context Protocol (MCP) server that provides real-time knowledge about various World of Warcraft specializations, connecting LLMs like Claude to current game information.
 ---
 
-# Experimenting with MCP: Building an Evergreen Knowledge Server for WoW Specs
-
----
-
 ## Introduction: What is MCP?
 
 The **Model Context Protocol (MCP)** is an open protocol that lets you build servers which provide context, tools, and resources to Large Language Models (LLMs) like Claude or ChatGPT. It enables connecting custom knowledge, workflows, and data to AI assistants in real-time.
