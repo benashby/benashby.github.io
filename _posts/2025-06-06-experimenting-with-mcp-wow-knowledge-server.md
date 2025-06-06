@@ -126,14 +126,165 @@ What consumables and enchants should I use as a Vengeance Demon Hunter tank?
 
 ## How We Built It
 
-1. **Compiled a list of trusted URLs** for VDH guides and stats
-2. **Wrote a Node.js tool** that:
-    - Loads a resource index (with topics/headings scraped from each site)
+1. **Compiled a list of trusted URLs** for VDH guides and stats:
+
+```javascript
+// From src/tools/vdh_resources_scraper.js
+const URLS = [
+  "https://murlok.io/demon-hunter/vengeance/mm+",
+  "https://www.wowhead.com/guide/classes/demon-hunter/vengeance/war-within-season-2",
+  "https://www.method.gg/guides/vengeance-demon-hunter/talents",
+  "https://www.icy-veins.com/wow/vengeance-demon-hunter-pve-tank-guide",
+  // ... many more URLs
+];
+```
+
+2. **Created a scraper** to build a resource index with headings from each site:
+
+```javascript
+// From src/tools/vdh_resources_scraper.js
+async function fetchAndExtract(url) {
+  try {
+    const { data } = await axios.get(url);
+    const $ = cheerio.load(data);
+    // Extract main headings and subheadings
+    const headings = [];
+    $("h1, h2, h3").each((_, el) => {
+      headings.push({
+        tag: el.tagName,
+        text: $(el).text().trim()
+      });
+    });
+    return { url, headings };
+  } catch (e) {
+    return { url, error: e.message };
+  }
+}
+
+// Run the scraper
+(async () => {
+  const results = [];
+  for (const url of URLS) {
+    console.log(`Fetching: ${url}`);
+    const result = await fetchAndExtract(url);
+    results.push(result);
+  }
+  fs.writeFileSync("vdh_resources_index.json", JSON.stringify(results, null, 2));
+  console.log("Done. Results written to vdh_resources_index.json");
+})();
+```
+
+3. **Wrote a Node.js MCP tool** that:
+    - Loads the resource index with topics/headings from each site
     - Matches user questions to relevant topics/URLs
     - Fetches and parses the live HTML using `axios` and `cheerio`
     - Extracts the most relevant section for the question
     - Returns the info and source links to the LLM
-3. **Integrated with Claude Desktop** by adding this to `claude_desktop_config.json`:
+
+```typescript
+// From src/tools/VengeanceDemonHunterTool.ts
+import { MCPTool } from "mcp-framework";
+import { z } from "zod";
+import axios from "axios";
+import * as cheerio from "cheerio";
+import fs from "fs";
+
+// Simple keyword-to-topic mapping
+const TOPIC_KEYWORDS: Record<string, string[]> = {
+  "rotation": ["rotation", "playstyle", "opener", "cooldown"],
+  "talents": ["talent", "build", "spec"],
+  "stats": ["stat", "priority"],
+  "consumables": ["consumable", "flask", "food", "potion", "enchant", "gem"],
+  "mythic+": ["mythic+", "m+", "dungeon"],
+  "raid": ["raid", "boss", "undermine"],
+  // ... more topics
+};
+
+// Find relevant resources based on question keywords
+function findRelevantResources(question: string): string[] {
+  const lowerQ = question.toLowerCase();
+  // Find all topics that match the question
+  const matchedTopics = Object.entries(TOPIC_KEYWORDS)
+    .filter(([topic, keywords]) => keywords.some(k => lowerQ.includes(k)))
+    .map(([topic]) => topic);
+
+  // Find resources whose headings or URL match any topic
+  const relevant = RESOURCE_INDEX.filter(resource => {
+    if (resource.error) return false;
+    if (matchedTopics.some(topic => resource.url.toLowerCase().includes(topic))) return true;
+    if (resource.headings && resource.headings.some(h => 
+        matchedTopics.some(topic => h.text.toLowerCase().includes(topic)))) return true;
+    return false;
+  });
+
+  return relevant.map(r => r.url);
+}
+
+// The main tool class
+class VengeanceDemonHunterTool extends MCPTool<VengeanceDemonHunterInput> {
+  name = "vengeance_demon_hunter";
+  description = "Answers any questions about Vengeance Demon Hunter in World of Warcraft.";
+
+  schema = {
+    question: {
+      type: z.string(),
+      description: "A question about Vengeance Demon Hunter",
+    },
+  };
+
+  async execute(input: VengeanceDemonHunterInput) {
+    const question = input.question;
+    // 1. Find relevant resources
+    const urls = findRelevantResources(question);
+    // 2. Fetch and extract relevant sections (limit to 5 for performance)
+    const fetches = urls.slice(0, 5).map(url => fetchRelevantSections(url, question));
+    const results = await Promise.all(fetches);
+    // 3. Format the output for the LLM
+    return {
+      question,
+      sources: results.map(r => ({ url: r.url, content: r.content }))
+    };
+  }
+}
+
+// Register the tool with the MCP framework
+new VengeanceDemonHunterTool();
+```
+
+4. **Set up the MCP server** with a simple entry point:
+
+```typescript
+// From src/index.ts
+import { MCPServer } from "mcp-framework";
+import "./tools/VengeanceDemonHunterTool.js";
+import { readFileSync } from "fs";
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
+
+// Get package info for server metadata
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const pkg = JSON.parse(readFileSync(join(__dirname, "../package.json"), "utf-8"));
+
+// Create and start the MCP server
+const server = new MCPServer({
+  name: pkg.name,
+  version: pkg.version,
+  transport: {
+    type: "sse",
+    options: {
+      port: 1337,
+      cors: {
+        allowOrigin: "*"
+      }
+    }
+  }
+});
+
+server.start();
+```
+
+5. **Integrated with Claude Desktop** by adding this to `claude_desktop_config.json`:
 ```json
 {
   "mcpServers": {
@@ -164,9 +315,131 @@ What consumables and enchants should I use as a Vengeance Demon Hunter tank?
 ---
 
 ## Want to Try It?
-- Check out [mcp-framework](https://github.com/QuantGeekDev/mcp-framework)
-- Fork this repo and add your own tools/resources
-- Connect to Claude Desktop or any LLM client that supports MCP
+
+Want to build your own WoW knowledge server or adapt this for another game or domain? Here's how to get started:
+
+### 1. Set up your project
+
+```bash
+# Create a new directory for your project
+mkdir wow-mcp-server
+cd wow-mcp-server
+
+# Initialize a new Node.js project
+npm init -y
+
+# Install dependencies
+npm install mcp-framework axios cheerio zod
+npm install -D typescript @types/node
+
+# Initialize TypeScript
+npx tsc --init
+```
+
+### 2. Create your MCP server
+
+Create `src/index.ts`:
+
+```typescript
+import { MCPServer } from "mcp-framework";
+import "./tools/WoWSpecTool.js";
+
+const server = new MCPServer({
+  name: "wow-spec-knowledge-server",
+  version: "1.0.0",
+  transport: {
+    type: "sse",
+    options: {
+      port: 1337,
+      cors: {
+        allowOrigin: "*"
+      }
+    }
+  }
+});
+
+server.start();
+```
+
+### 3. Create your custom tool
+
+Create `src/tools/WoWSpecTool.ts`:
+
+```typescript
+import { MCPTool } from "mcp-framework";
+import { z } from "zod";
+import axios from "axios";
+import * as cheerio from "cheerio";
+
+// Define your tool's input interface
+interface WoWSpecInput {
+  question: string;
+  spec?: string;  // Optional spec parameter
+}
+
+class WoWSpecTool extends MCPTool<WoWSpecInput> {
+  name = "wow_spec_knowledge";
+  description = "Answers questions about World of Warcraft specializations";
+
+  schema = {
+    question: {
+      type: z.string(),
+      description: "A question about a WoW specialization",
+    },
+    spec: {
+      type: z.string().optional(),
+      description: "Optional: The specific specialization (e.g., 'Vengeance Demon Hunter')",
+    },
+  };
+
+  async execute(input: WoWSpecInput) {
+    // Your implementation here
+    // 1. Find relevant resources
+    // 2. Fetch and extract content
+    // 3. Return formatted results
+
+    return {
+      question: input.question,
+      sources: [
+        {
+          url: "https://example.com/wow-guide",
+          content: "Example content about the spec"
+        }
+      ]
+    };
+  }
+}
+
+// Register the tool
+new WoWSpecTool();
+```
+
+### 4. Connect to Claude Desktop
+
+Add this to your Claude Desktop configuration:
+
+```json
+{
+  "mcpServers": {
+    "wow-spec": {
+      "command": "node",
+      "args": ["path/to/your/dist/index.js"]
+    }
+  }
+}
+```
+
+### 5. Build and run your server
+
+```bash
+# Compile TypeScript
+npx tsc
+
+# Run your server
+node dist/index.js
+```
+
+For a complete implementation, check out my [wow-mcp repository](https://github.com/benashby/wow-mcp) which includes the full Vengeance Demon Hunter tool with resource scraping, keyword matching, and content extraction.
 
 ---
 
