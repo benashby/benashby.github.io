@@ -21,8 +21,8 @@ html {
 }
 
 body {
-  background: #fff;
-  font-family: -system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  background: #f9f9f9;
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
   color: #404040;
   line-height: 1.7;
   font-weight: 400;
@@ -32,20 +32,18 @@ body {
 
 .container {
   margin: 0 auto;
-  max-width: 740px;
+  max-width: 960px;
   padding: 0 10px;
   width: 100%;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: -system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
   color: $darkerGray;
   font-weight: bold;
-
   line-height: 1.7;
   margin: 1em 0 15px;
   padding: 0;
-  text-align: center;
 
   @include mobile {
     line-height: 1.4;
@@ -66,12 +64,7 @@ h2 {
 @media (min-width: 769px){
 	.post h2::before, .post h2::after {
 	    content: "";
-	    display: inline-block;
-	    vertical-align: middle;
-	    width: 46px;
-	    height: 1px;
-	    background: rgb(192, 211, 218);
-	    margin: 0px 30px;
+	    display: none;
 	}
 }
 
@@ -269,7 +262,7 @@ p > img {
 }
 
 .masthead {
-  padding: 20px 0;
+  padding: 30px 0;
   border-bottom: 1px solid $lightGray;
 
   @include mobile {
@@ -346,10 +339,10 @@ nav {
   }
 
   a {
-    margin-left: 20px;
+    margin-left: 25px;
     color: $darkGray;
     text-align: right;
-    font-weight: 300;
+    font-weight: 400;
     letter-spacing: 1px;
 
     @include mobile {
@@ -363,25 +356,52 @@ nav {
 // .main
 //
 
-.posts > .post {
-  padding-bottom: 2em;
-  border-bottom: 1px solid $lightGray;
+.posts > .post-card {
+  padding: 2em;
+  margin-bottom: 2em;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
 }
 
-.posts > .post:last-child {
-  padding-bottom: 1em;
-  border-bottom: none;
+.posts > .post-card:last-child {
+  margin-bottom: 2em;
+}
+
+.post.detailed {
+  background: #fff;
+  padding: 2em 3em;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.post.detailed h1 {
+  font-size: 38px;
+  line-height: 1.3;
+  text-align: left;
+}
+
+.post.detailed h2 {
+  font-size: 28px;
+  margin-top: 1.5em;
+}
+
+.post.detailed h3 {
+  font-size: 22px;
+  margin-top: 1.2em;
 }
 
 .post {
   blockquote {
     margin: 1.8em .8em;
-    /*border-left: 2px solid $gray;*/
     padding: 0.1em 1em;
     color: $gray;
     font-size: 22px;
     font-style: italic;
-    background-color: #ede1ff;
+    background-color: #f3f3f3;
+    border-left: 4px solid #4183C4;
   }
 
   .you-may-like{
@@ -449,17 +469,27 @@ body:after {
 }
 
 .post h1{
-  font-family: -system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  text-align: center;
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  text-align: left;
   font-weight: bold;
   font-kerning: auto;
   font-feature-settings: "kern","liga","dlig","hlig","cswh";
   line-height: 1.2;
 }
 
+.post-card h1 {
+  font-size: 26px;
+  text-align: left;
+}
+
+.post-card .entry {
+  font-size: 16px;
+  color: #555;
+}
+
 .page h1{
-  font-family: -system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  text-align: center;
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  text-align: left;
   font-weight: bold;
   font-kerning: auto;
   font-feature-settings: "kern","liga","dlig","hlig","cswh";

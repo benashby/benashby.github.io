@@ -4,13 +4,12 @@ layout: default
 
 <div class="posts">
   {% for post in paginator.posts %}
-    <article class="post">
+    <article class="post-card">
       <a href="{{ site.baseurl }}{{ post.url }}">
-        <h1>{{ post.title }}</h1>
-
-        <div>
+        <header>
+          <h1>{{ post.title }}</h1>
           <p class="post_date">{{ post.date | date: "%B %e, %Y" }}</p>
-        </div>
+        </header>
       </a>
       <div class="entry">
         {{ post.excerpt }}
