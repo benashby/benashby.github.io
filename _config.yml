@@ -82,6 +82,7 @@ plugins:
   - jekyll-feed # Create an Atom feed using the official Jekyll feed gem
   - jekyll-seo-tag
   - jekyll-paginate
+  - jekyll-target-blank
 
 include: ['_pages']
 
@@ -102,3 +103,8 @@ exclude:
   - README.md
   - CNAME
 
+
+# Plugin configuration
+target-blank:
+  rel: noopener noreferrer
+  add_css_classes: external-link

@@ -17,3 +17,4 @@ vendor
 .devcontainer/.env
 .devcontainer/devcontainer.env
 .podman/
+.roomodes
