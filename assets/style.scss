@@ -1204,6 +1204,31 @@ Modules - reusable parts of our design
   }
 }
 
+/* Code block formatting for Unicode tree characters */
+.highlighter-rouge .highlight,
+.highlight,
+div.highlight,
+pre.highlight {
+  white-space: pre !important;
+  font-family: 'Consolas', 'Monaco', 'Courier New', 'Liberation Mono', 'DejaVu Sans Mono', monospace !important;
+  overflow-x: auto;
+  line-height: 1.4;
+}
+
+.highlighter-rouge .highlight pre,
+.highlight pre,
+div.highlight pre,
+pre.highlight pre {
+  white-space: pre !important;
+  word-wrap: normal;
+  overflow-x: auto;
+}
+
+/* Ensure code blocks don't collapse whitespace */
+code {
+  white-space: pre;
+  font-family: 'Consolas', 'Monaco', 'Courier New', 'Liberation Mono', 'DejaVu Sans Mono', monospace;
+}
 // Settled on moving the import of syntax highlighting to the bottom of the CSS
 // ... Otherwise it really bloats up the top of the CSS file and makes it difficult to find the start
 //@import "highlights";
