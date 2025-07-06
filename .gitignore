@@ -12,3 +12,8 @@ package.json
 .jekyll-cache
 vendor
 .idea/
+
+# Container related
+.devcontainer/.env
+.devcontainer/devcontainer.env
+.podman/

@@ -1169,6 +1169,40 @@ Modules - reusable parts of our design
   }
 }
 
+// Resources section styles
+.resources-list {
+  margin-top: 2em;
+}
+
+.resource-item {
+  padding: 1.5em;
+  margin-bottom: 1.5em;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  
+  h3 {
+    margin-top: 0;
+    margin-bottom: 0.5em;
+    font-size: 24px;
+  }
+  
+  p {
+    margin: 0;
+    color: #555;
+    font-size: 16px;
+  }
+  
+  a {
+    text-decoration: none;
+    color: inherit;
+    
+    &:hover {
+      color: $blue;
+    }
+  }
+}
 
 // Settled on moving the import of syntax highlighting to the bottom of the CSS
 // ... Otherwise it really bloats up the top of the CSS file and makes it difficult to find the start

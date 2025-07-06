@@ -1,0 +1,24 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.245.2/containers/docker-existing-dockerfile
+{
+	"name": "Jekyll Development Container",
+	
+	// Sets the run context to one level up instead of the .devcontainer folder.
+	"context": "..",
+	
+	// Update the 'dockerFile' property if you aren't using the standard 'Dockerfile' filename.
+	"dockerFile": "../dockerfile",
+	
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	"forwardPorts": [4000],
+	
+	// Run commands after the container is created - install dependencies
+	"postCreateCommand": "bundle install && bundle update",
+	
+	// Add VS Code extensions
+	"extensions": [
+		"rebornix.ruby",
+		"wingrunr21.vscode-ruby",
+		"yzhang.markdown-all-in-one"
+	]
+}

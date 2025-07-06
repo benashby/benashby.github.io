@@ -3,11 +3,20 @@
 [
   {% for post in site.posts %}
     {
-
       "title"    : "{% if post.title != "" %}{{ post.title | escape }}{% else %}{{ post.excerpt | strip_html |  escape | strip }}{%endif%}",
       "url"      : "{{ site.baseurl }}{{ post.url }}",
       "category" : "{{ post.categories | join: ', '}}",
-      "date"     : "{{ post.date | date: "%B %e, %Y" }}"
-    } {% unless forloop.last %},{% endunless %}
+      "date"     : "{{ post.date | date: "%B %e, %Y" }}",
+      "type"     : "post"
+    },
+  {% endfor %}
+  {% for resource in site.resources %}
+    {
+      "title"    : "{{ resource.title | escape }}",
+      "url"      : "{{ site.baseurl }}{{ resource.url }}",
+      "category" : "Resource",
+      "date"     : "{{ resource.date | date: "%B %e, %Y" }}",
+      "type"     : "resource"
+    }{% unless forloop.last %},{% endunless %}
   {% endfor %}
 ]
